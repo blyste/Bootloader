@@ -1,0 +1,20 @@
+Bonjour ou Bonsoir !
+
+Entrons dans le vif du sujet :
+Vous expliquez un peu ou j'en suis au moment de la deadline et ce que sont tous ces fichiers !
+
+D'abord, mon bootloader fonctionne, (du moins, de ce que j'en ai vu), sans openocd, en flash.
+
+J'ai fait un bootloader qui ne s'execute pas in place, mais qui se recopie en ram comme un grand
+puis s'execute en ram. (parce que, l'execute in place, c'est le mal !! )
+Je peux charger un programme à l'adresse 0x0c240000 (qui est le fameux timer_test.bin) et le brancher
+.. et faire ainsi clignoter des leds à l'infini. (c'est fou, ce qu'on apprend en elec223... hihi)
+
+Mais, si au bout de 10sec, je suis toujours dans mon bootloader, et bien, je vais en 0x3000 en flash
+
+Du coup, pour que cela serve à quelque chose de s'être donné la peine d'aller en 0x3000...
+j'ai essayé de générer un programme qui s'appelle program0x3000 que l'on pourrait
+flasher à l'adresse 0x3000 qui se recopierai en ram, et s'executerait, et ferait clignoter les leds
+à l'infini.
+
+Bonne lecture !

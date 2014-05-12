@@ -1,0 +1,38 @@
+/* LDSCRIPT pour les executables à charger par le bootloader;
+
+Mappage de la mémoire flash (read only)
+et ram (non read only = write and read memory) */
+
+MEMORY
+	{
+		flash (rx) : ORIGIN =0x00000000 , LENGTH = 2M
+		ram (!rx) : ORIGIN =0x0C240000 , LENGTH = 8M
+	}
+
+SECTIONS
+	{
+		/* On va commencer par stocker le code à l'adresse 40000 de la ram */
+		        
+		.text : {
+			crt0.o(.text)
+			*(.text);
+		} > ram 
+
+		/* Ensuite, on va stocker les autres sections
+		les unes à la suite des autres */
+		.rodata : {
+			*(.rodata);
+		} > ram
+
+		.data : {
+			*(.data);
+		} > ram
+
+		.bss : {
+			_bss = .;
+			*(.bss) *(COMMON);
+			_ebss = .;
+		} > ram
+	}
+
+ENTRY(_start);

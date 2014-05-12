@@ -1,0 +1,48 @@
+/* LDSCRIPT
+
+Mappage de la mémoire flash (read only)
+et ram (non read only = write and read memory) */
+
+MEMORY
+	{
+		flash (rx) : ORIGIN =0x00000000 , LENGTH = 2M
+		ram (!rx) : ORIGIN =0x0C200000 , LENGTH = 8M
+	}
+
+SECTIONS
+	{
+        .startup : { crt0.o(.text) initialisation.o(.text) } > flash
+
+		/* On va commencer par stocker le code à l'adresse 0 de la ram */
+		.text : {
+			_text = .;
+			*(.text);
+			_etext = .;
+		} > ram AT> flash
+
+		/* Ensuite, on va stocker les autres sections
+		les unes à la suite des autres */
+		.rodata : {
+			/* On rajout des repères dans rodata qui nous serviront
+			   à connaître les adresses LMA pour le .text et le .data
+			   car pour .rodata, LMA = VMA */
+			_rodata = .;
+			*(.rodata);
+			_erodata = .;
+		} > flash
+
+		.data : {
+			_data = .;
+			*(.data);
+			_edata = .;
+		} > ram AT> flash
+
+		/* On repère le début et la fin de bss dans _bss et _ebss */
+		.bss : {
+			_bss = .;
+			*(.bss) *(COMMON);
+			_ebss = .;
+		} > ram
+	}
+
+ENTRY(_start);
